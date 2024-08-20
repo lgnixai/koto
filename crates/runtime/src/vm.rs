@@ -2271,6 +2271,10 @@ impl KotoVm {
                 let index = self.validate_index(n, Some(l.len()))?;
                 l.data()[index].clone()
             }
+            (Series(l), Number(n)) => {
+                let index = self.validate_index(n, Some(l.len()))?;
+                l.data()[index].clone()
+            }
             (List(l), Range(range)) => {
                 let indices = range.indices(l.len());
                 List(KList::from_slice(&l.data()[indices]))
