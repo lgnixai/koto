@@ -167,7 +167,7 @@ impl KValue {
             Bool(_) => TYPE_BOOL.with(|x| x.clone()),
             Number(_) => TYPE_NUMBER.with(|x| x.clone()),
             List(_) => TYPE_LIST.with(|x| x.clone()),
-            Series(_) => TYPE_LIST.with(|x| x.clone()),
+            Series(_) => TYPE_SERIES.with(|x| x.clone()),
             Range { .. } => TYPE_RANGE.with(|x| x.clone()),
             Map(m) if m.meta_map().is_some() => match m.get_meta_value(&MetaKey::Type) {
                 Some(Str(s)) => s,

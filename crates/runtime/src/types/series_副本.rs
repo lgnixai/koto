@@ -9,6 +9,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use smallvec::SmallVec;
 use crate::KValue::List;
+use crate::types::series_type::DataType;
 
 
 /// The core hashmap value type used in Koto, containing a [ValueMap] and a [MetaMap]
@@ -86,10 +87,10 @@ impl  KSeries  {
     fn index(&self, _index: &KValue) -> Result<KValue> {
         todo!("adsfsdf")
     }
-    // fn add(&self, _index: &KValue) -> Result<KValue> {
-    //
-    //     crate::types::object::unimplemented_error("@index", self.type_string())
-    // }
+    fn add(&self, _index: &KValue) -> Result<KValue> {
+
+        crate::types::object::unimplemented_error("@index", self.type_string())
+    }
 
 
 }
