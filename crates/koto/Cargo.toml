@@ -25,7 +25,7 @@ thiserror = { workspace = true }
 [dev-dependencies]
 koto_geometry = { path = "../../libs/geometry" }
 koto_color = { path = "../../libs/color" }
-koto_series = { path = "../../libs/series" }
+
 koto_test_utils = { path = "../test_utils" }
 
 anyhow = { workspace = true }

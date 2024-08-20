@@ -1,10 +1,4 @@
-use crate::{
-    core_lib::CoreLib,
-    error::{Error, ErrorKind},
-    prelude::*,
-    types::{meta_id_to_key, value::RegisterSlice},
-    DefaultStderr, DefaultStdin, DefaultStdout, KCaptureFunction, KFunction, Ptr, Result,
-};
+use crate::{core_lib::CoreLib, error::{Error, ErrorKind}, prelude::*, types::{meta_id_to_key, value::RegisterSlice}, DefaultStderr, DefaultStdin, DefaultStdout, KCaptureFunction, KFunction, Ptr, Result, KSeries};
 use instant::Instant;
 use koto_bytecode::{Chunk, Instruction, InstructionReader, Loader};
 use koto_parser::{ConstantIndex, MetaKeyId, StringAlignment, StringFormatOptions};
@@ -17,6 +11,8 @@ use std::{
     time::Duration,
 };
 use unicode_segmentation::UnicodeSegmentation;
+use crate::BinaryOp::{Add, Multiply, Subtract};
+use crate::KValue::{Number, Series};
 
 #[derive(Clone)]
 pub enum ControlFlow {
@@ -1432,12 +1428,92 @@ impl KotoVm {
         }
     }
 
+    //操作时间序列
+    fn match_series(&mut self,result: u8, lhs: u8, rhs: u8,op: BinaryOp)-> Result<()>{
+        let lhs_value = self.get_register(lhs);
+        let rhs_value = self.get_register(rhs);
+        let result_value =match (lhs_value, rhs_value) {
+            (Series(a), _) => {
+                let mut new_history = ValueVec::new();
+                match (rhs_value) {
+                    Number(b) => {
+                        for (i, value) in a.data().iter().enumerate() {
+                            match (value,op) {
+
+                                (Number(a),BinaryOp::Add) => new_history.push(Number(a + b)),
+                                (Number(a),BinaryOp::Subtract) => new_history.push(Number(a - b)),
+                                (Number(a),BinaryOp::Divide) => new_history.push(Number(a / b)),
+                                (Number(a),BinaryOp::Multiply) => new_history.push(Number(a * b)),
+                                _ => return binary_op_error(lhs_value, rhs_value, op),
+                            }
+                        }
+                    }
+                    Series(b) => {
+                        for (lhs_value, rhs_value) in a.data().iter().zip(b.data().iter()) {
+                            match (lhs_value, rhs_value,op) {
+                                (Number(a), Number(b),BinaryOp::Add) => new_history.push(Number(a + b)),
+                                (Number(a), Number(b),BinaryOp::Subtract) => new_history.push(Number(a - b)),
+                                (Number(a), Number(b),BinaryOp::Divide) => new_history.push(Number(a / b)),
+                                (Number(a), Number(b),BinaryOp::Multiply) => new_history.push(Number(a * b)),
+                                _ => return binary_op_error(lhs_value, rhs_value, op),
+                            }
+                        }
+                    }
+                    _ => return binary_op_error(lhs_value, rhs_value, op)
+
+                }
+                Series(KSeries::with_data(new_history))
+            }
+
+            (_, Series(b)) => {
+                let mut new_history = ValueVec::new();
+                match (lhs_value) {
+                    Number(a) => {
+                        for (i, value) in b.data().iter().enumerate() {
+
+                            match (value,op) {
+                                (Number(b),BinaryOp::Add) => new_history.push(Number(a + b)),
+                                (Number(b),BinaryOp::Subtract) => new_history.push(Number(a - b)),
+                                (Number(b),BinaryOp::Divide) => new_history.push(Number(a / b)),
+                                (Number(b),BinaryOp::Multiply) => new_history.push(Number(a * b)),
+                                _ => return binary_op_error(lhs_value, rhs_value, op),
+                            }
+                        }
+                    }
+                    Series(a) => {
+                        for (lhs_value, rhs_value) in b.data().iter().zip(a.data().iter()) {
+
+                            match (lhs_value, rhs_value,op) {
+                                (Number(a), Number(b),BinaryOp::Add) => new_history.push(Number(a + b)),
+                                (Number(a), Number(b),BinaryOp::Subtract) => new_history.push(Number(a - b)),
+                                (Number(a), Number(b),BinaryOp::Divide) => new_history.push(Number(a / b)),
+                                (Number(a), Number(b),BinaryOp::Multiply) => new_history.push(Number(a * b)),
+                                _ => return binary_op_error(lhs_value, rhs_value, op),
+                            }
+                        }
+                    }
+                    _ => return binary_op_error(lhs_value, rhs_value, op)
+
+                }
+                Series(KSeries::with_data(new_history))
+
+            }
+            _ => return binary_op_error(lhs_value, rhs_value, op)
+        };
+        self.set_register(result, result_value);
+        Ok(())
+    }
+
     fn run_add(&mut self, result: u8, lhs: u8, rhs: u8) -> Result<()> {
         use BinaryOp::Add;
         use KValue::*;
 
         let lhs_value = self.get_register(lhs);
         let rhs_value = self.get_register(rhs);
+
+        if lhs_value.type_as_string()=="Series" || rhs_value.type_as_string()=="Series" {
+            return self.match_series(result, lhs, rhs, Add);
+        }
         let result_value = match (lhs_value, rhs_value) {
             (Number(a), Number(b)) => Number(a + b),
             (Str(a), Str(b)) => {
@@ -1448,6 +1524,8 @@ impl KotoVm {
                 let result: ValueVec = a.data().iter().chain(b.data().iter()).cloned().collect();
                 List(KList::with_data(result))
             }
+
+
             (Tuple(a), Tuple(b)) => {
                 let result: Vec<_> = a.iter().chain(b.iter()).cloned().collect();
                 Tuple(result.into())
@@ -1486,6 +1564,9 @@ impl KotoVm {
 
         let lhs_value = self.get_register(lhs);
         let rhs_value = self.get_register(rhs);
+        if lhs_value.type_as_string()=="Series" || rhs_value.type_as_string()=="Series" {
+            return self.match_series(result, lhs, rhs, Subtract);
+        }
         let result_value = match (lhs_value, rhs_value) {
             (Number(a), Number(b)) => Number(a - b),
             (Map(m), _) if m.contains_meta_key(&Subtract.into()) => {
@@ -1507,7 +1588,9 @@ impl KotoVm {
 
         let lhs_value = self.get_register(lhs);
         let rhs_value = self.get_register(rhs);
-
+        if lhs_value.type_as_string()=="Series" || rhs_value.type_as_string()=="Series" {
+            return self.match_series(result, lhs, rhs, Multiply);
+        }
         let result_value = match (lhs_value, rhs_value) {
             (Number(a), Number(b)) => Number(a * b),
             (Map(m), _) if m.contains_meta_key(&Multiply.into()) => {
@@ -1529,6 +1612,9 @@ impl KotoVm {
 
         let lhs_value = self.get_register(lhs);
         let rhs_value = self.get_register(rhs);
+        if lhs_value.type_as_string()=="Series" || rhs_value.type_as_string()=="Series" {
+            return self.match_series(result, lhs, rhs, Divide);
+        }
         let result_value = match (lhs_value, rhs_value) {
             (Number(a), Number(b)) => Number(a / b),
             (Map(m), _) if m.contains_meta_key(&Divide.into()) => {

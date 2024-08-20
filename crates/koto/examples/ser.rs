@@ -4,10 +4,13 @@ use koto_runtime::KSeries;
 fn main() {
     let script = "
 let close=[2,3,4]
-let b=ta(close)
+let high=[10,20,30]
+let c=ta(close)
+let h=ta(high)
+print type c
+print c,h, h/5
 
-print type b
-print b[0]
+
 ";
     let mut koto = Koto::default();
     let prelude = koto.prelude();
