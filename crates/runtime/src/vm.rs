@@ -2359,7 +2359,8 @@ impl KotoVm {
             }
             (Series(l), Number(n)) => {
                 let index = self.validate_index(n, Some(l.len()))?;
-                l.data()[index].clone()
+                KValue::from(l.get_series_from(index))
+                //l.data()[index].clone()
             }
             (List(l), Range(range)) => {
                 let indices = range.indices(l.len());

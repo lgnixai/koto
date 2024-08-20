@@ -3,12 +3,13 @@ use koto_runtime::KSeries;
 
 fn main() {
     let script = "
-let close=[2,3,4]
+let close=[2,3,4,5,6,7,8]
 let high=[10,20,30]
 let c=ta(close)
 let h=ta(high)
 print type c
 print c,h, h/5
+print h,h[1],c[2]
 
 
 ";

@@ -17,259 +17,24 @@ use std::borrow::BorrowMut;
 use std::ops::Add;
 
 
-
-macro_rules! impl_arithmetic_op {
-    ($trait:ident, $trait_fn:ident, $op:tt) => {
-        impl ops::$trait for KSeries {
-            type Output = Self;
-
-            fn $trait_fn(self, other: Self) -> Self {
-                let mut new_history = ValueVec::new();
-                for (a, b) in self.data().iter().zip(other.data().iter()){
-                    new_history.push(a.clone());
-                }
-
-                //let new_current = current_val.$func(rhs_current_val);
-
-                KSeries {
-                   // current: Ptr::new(new_current),
-                  history: PtrMut::new(KCell::from(new_history)),
-
-                }.into()
-
-
-                // Inner{
-                //     color: self.0.color $op other.0.color,
-                //     alpha: self.0.alpha
-                // }.into()
-            }
-        }
-
-        impl ops::$trait<KValue> for KSeries {
-            type Output = Self;
-
-            fn $trait_fn(self, other: KValue) -> Self {
-                let mut new_history = ValueVec::new();
-                 for a in self.data().iter() {
-                    new_history.push(a.clone());
-                }
-
-                //let new_current = current_val.$func(rhs_current_val);
-
-                KSeries {
-                   // current: Ptr::new(new_current),
-                  history: PtrMut::new(KCell::from(new_history)),
-
-                }.into()
-            }
-        }
-    };
-}
-#[macro_export]
-macro_rules! color_arithmetic_op {
-    ($self:ident, $rhs:expr, $op:tt) => {
-        {
-            match $rhs {
-                KValue::Object(rhs) if rhs.is_a::<Self>() => {
-                   let mut new_history = ValueVec::new();
-                     for a in $self.data().iter() {
-                        new_history.push(a.clone());
-                    }
-
-                    //let new_current = current_val.$func(rhs_current_val);
-
-                   let a= KSeries {
-                       // current: Ptr::new(new_current),
-                      history: PtrMut::new(KCell::from(new_history)),
-
-                    };
-                    Ok((a.into()))
-                }
-                KValue::Number(n) => {
-
-                     let mut new_history = ValueVec::new();
-                     for a in $self.data().iter() {
-                        new_history.push(a.clone());
-                    }
-
-                    //let new_current = current_val.$func(rhs_current_val);
-
-                   let a= KSeries {
-                       // current: Ptr::new(new_current),
-                      history: PtrMut::new(KCell::from(new_history)),
-
-                    };
-                    Ok((a.into()))
-
-                },
-                unexpected => {
-                    unexpected_type(&format!("a {} or Number", Self::type_static()), unexpected)
-                }
-            }
-        }
-    }
-}
-//impl_arithmetic_op!(Add, add, +);
-//
-// macro_rules! impl_series_kvalue_ops {
-//     ($trait:ident, $fn:ident, $op:tt) => {
-//         impl ops::$trait for KSeries {
-//             type Output = KSeries;
-//
-//             fn $fn(self, other: KSeries) -> KSeries {
-//                 use KSeries::*;
-//
-//                 // match (self, other) {
-//                 //     (F64(a), F64(b)) => F64(a $op b),
-//                 //     (F64(a), I64(b)) => F64(a $op b as f64),
-//                 //     (I64(a), F64(b)) => F64(a as f64 $op b),
-//                 //     (I64(a), I64(b)) => I64(a $op b),
-//                 // }
-//
-//                 let mut new_history = ValueVec::new();
-//                // let current_val = self.current();
-//                // let rhs_current_val = rhs.current();
-//
-//
-//                 for (a, b) in self.data().iter().zip(other.data().iter()) {
-//                     new_history.push(a.clone().$op(b.clone()));
-//                 }
-//
-//                 //let new_current = current_val.$func(rhs_current_val);
-//
-//                 KSeries {
-//                    // current: Ptr::new(new_current),
-//                   history: PtrMut::new(KCell::from(new_history)),
-//
-//                 }
-//             }
-//         }
-//
-//         impl $trait<KValue> for KSeries {
-//             type Output = KSeries;
-//
-//             fn $fn(self, other: KSeries) -> KSeries {
-//                 use KSeries::*;
-//                 let mut new_history = ValueVec::new();
-//                 //let current_val = self.current();
-//                 match other {
-//                   KValue::Number(knumber) => {
-//                        for a in self.data().iter() {
-//                             new_history.push(a.clone().$op(knumber.into()));
-//                        }
-//
-//                   }, // 将 KNumber 转换为 usize
-//                   _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
-//
-//
-//                 }
-//
-//
-//
-//                 ///let new_current = current_val.$func(rhs);
-//
-//                 KSeries {
-//                    // current: Ptr::new(new_current),
-//                     history: PtrMut::new(KCell::from(new_history)),
-//                 }
-//             }
-//         }
-//
-//         // impl ops::$trait for &KNumber {
-//         //     type Output = KNumber;
-//         //
-//         //     fn $fn(self, other: &KNumber) -> KNumber {
-//         //         use KNumber::*;
-//         //
-//         //         match (*self, *other) {
-//         //             (F64(a), F64(b)) => F64(a $op b),
-//         //             (F64(a), I64(b)) => F64(a $op b as f64),
-//         //             (I64(a), F64(b)) => F64(a as f64 $op b),
-//         //             (I64(a), I64(b)) => I64(a $op b),
-//         //         }
-//         //     }
-//         // }
-//     };
-// }
-// 实现四则运算宏
-// macro_rules! impl_series_ops {
-//     ($trait:ident, $func:ident) => {
-//         impl $trait for KSeries {
-//             type Output = KSeries;
-//
-//             fn $func(self, rhs: KSeries) -> KSeries {
-//                 let mut new_history = ValueVec::new();
-//                // let current_val = self.current();
-//                // let rhs_current_val = rhs.current();
-//
-//
-//                 for (a, b) in self.data().iter().zip(rhs.data().iter()) {
-//                     new_history.push(a.clone().$func(b.clone()));
-//                 }
-//
-//                 //let new_current = current_val.$func(rhs_current_val);
-//
-//                 KSeries {
-//                    // current: Ptr::new(new_current),
-//                   history: PtrMut::new(KCell::from(new_history)),
-//
-//                 }
-//             }
-//         }
-//          impl $trait<KValue> for KSeries {
-//             type Output = KSeries;
-//
-//             fn $func(self, rhs: KValue) -> KSeries {
-//                 let mut new_history = ValueVec::new();
-//                 //let current_val = self.current();
-//                 match rhs {
-//                   KValue::Number(knumber) => {
-//                        for a in self.data().iter() {
-//                             new_history.push(a.clone().$func(knumber.into()));
-//                        }
-//
-//                   }, // 将 KNumber 转换为 usize
-//                   _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
-//
-//
-//                 }
-//
-//
-//
-//                 ///let new_current = current_val.$func(rhs);
-//
-//                 KSeries {
-//                    // current: Ptr::new(new_current),
-//                     history: PtrMut::new(KCell::from(new_history)),
-//                 }
-//             }
-//         }
-//
-//     }
-// }
-
-
 /// The core hashmap value type used in Koto, containing a [ValueMap] and a [MetaMap]
 
 pub type ValueVec = smallvec::SmallVec<[KValue; 4]>;
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub struct KSeries {
-   // current: PtrMut<KValue>,
+    // current: PtrMut<KValue>,
     history: PtrMut<crate::ValueVec>,
 }
 
 impl KSeries {
     pub fn new(history: crate::ValueVec) -> Self {
-        let v=(KValue::Number(KNumber::I64(0)));
+        let v = (KValue::Number(KNumber::I64(0)));
 
         KSeries {
-          //  current: PtrMut::from(v),
-            history:  PtrMut::from(KCell::from(history))
+            //  current: PtrMut::from(v),
+            history: PtrMut::from(KCell::from(history))
         }
-
-
-
     }
 
 
@@ -301,7 +66,7 @@ impl KSeries {
     }
 
     /// Creates a KMap initialized with the provided data and meta map
-    pub fn with_contents(data: ValueVec ) -> Self {
+    pub fn with_contents(data: ValueVec) -> Self {
         Self {
             history: data.into(),
 
@@ -316,40 +81,70 @@ impl KSeries {
 
     // 索引实现
     // pub fn get_series(&self, index: usize) -> KSeries {
-    //     let history_len = self.data().len();
-    //     let mut new_history = crate::ValueVec::new();
+    //     let data = self.data();
+    //     let history_len = data.len();
+    //     let mut new_history = crate::ValueVec::with_capacity(history_len);
     //
     //     for i in 0..history_len {
-    //         if i + index < history_len {
-    //             new_history.push(
-    //                 self.data()
-    //                     .as_ref()
-    //                     .values[history_len - 1 - i - index]
-    //                     .clone(),
-    //             );
+    //         let value = if let Some(v) = data.get(history_len - 1 - i - index) {
+    //             v.clone()
     //         } else {
-    //             new_history.push(KValue::Number(0)); // 不足的部分用 0 填充
-    //         }
+    //             KValue::Number(KNumber::I64(0))
+    //         };
+    //         new_history.push(value);
     //     }
     //
     //     KSeries {
-    //         current: Ptr::new(
-    //             self.history
-    //                 .as_ref()
-    //                 .values
-    //                 .get(history_len.saturating_sub(index + 1))
-    //                 .unwrap_or(&KValue::Number(0))
-    //                 .clone(),
-    //         ),
-    //         history: PtrMut::new(new_history),
+    //         history: PtrMut::new(KCell::from(new_history)),
     //     }
     // }
+    fn index(&self, index: &KValue) -> Result<KValue> {
+        println!("====asfsdf");
+        println!("====asfsdf");
+        let _index: usize = match index {
+            KValue::Number(knumber) =>{
+
+                knumber.into()
+            } , // 将 KNumber 转换为 usize
+            // 如果 KValue 还有其他变体，你可以选择如何处理这些情况
+            _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
+        };
+        let a=self.get_series_from(_index);
+        //let a = self.data()[_index].clone();
+        Ok(KValue::Series(a))
+    }
+
+    // 获取一个新的 Series，其中切片从 start 开始，如果长度不够，则补 Null
+    pub fn get_series_from(&self, start: usize) -> KSeries {
+        let history = self.data();
+        let mut new_history = ValueVec::new();
+
+        // If the start index is out of range, return a Series with Null values
+        if start >= history.len() {
+            new_history.push(KValue::Null); // You can add more Null values if needed
+        } else {
+            // Copy elements from the start index
+            for value in &history[start..] {
+                new_history.push(value.clone());
+            }
+
+            // Pad with Nulls to match the original history length
+            while new_history.len() < history.len() {
+                new_history.push(KValue::Null);
+            }
+        }
+
+        // 创建新的 Series，current 为新的第一个值，history 为新数组
+            KSeries {
+                history: PtrMut::new(KCell::from(new_history)),
+            }
+    }
 }
 
 
 impl KotoType for KSeries {
     fn type_static() -> &'static str where Self: Sized {
-         "Series"
+        "Series"
     }
 
     fn type_string(&self) -> KString {
@@ -362,136 +157,26 @@ impl KotoCopy for KSeries {
         todo!()
     }
 }
-//
-// impl Add for KValue {
-//     type Output = KValue;
-//
-//     fn add(self, rhs: KValue) -> KValue {
-//         match (self, rhs) {
-//             (KValue::Number(KNumber::I64(a)), KValue::Number(KNumber::I64(b))) => KValue::Number(KNumber::I64(a + b)),
-//             // 处理其他情况...
-//             _ => panic!("Unsupported operation"),
-//         }
-//     }
-// }
-//
-// impl Add for KSeries {
-//     type Output = KSeries;
-//
-//     fn add(self, other: KSeries) -> KSeries {
-//         let mut new_history = ValueVec::new();
-//
-//         for (a, b) in self.data().iter().zip(other.data().iter()) {
-//             new_history.push(a.clone() + b.clone());
-//         }
-//
-//         KSeries {
-//             history: PtrMut::new(KCell::from(new_history)),
-//         }
-//     }
-// }
-//
-// impl Add<KValue> for KSeries {
-//     type Output = KSeries;
-//
-//     fn add(self, other: KValue) -> KSeries {
-//
-//
-//         println!("adfadfasdf");
-//         let mut new_history = ValueVec::new();
-//
-//         match other {
-//             KValue::Number(knumber) => {
-//                 for a in self.data().iter() {
-//                     new_history.push(a.clone() + knumber.into());
-//                 }
-//             },
-//             _ => panic!("KValue does not contain a KNumber"),
-//         }
-//
-//         KSeries {
-//             history: PtrMut::new(KCell::from(new_history)),
-//         }
-//     }
-// }
-//
-// impl Add<KNumber> for KSeries {
-//     type Output = KSeries;
-//
-//     fn add(self, other: KNumber) -> KSeries {
-//         let mut new_history = ValueVec::new();
-//
-//         for a in self.data().iter() {
-//             new_history.push(a.clone() + other.into());
-//         }
-//
-//         KSeries {
-//             history: PtrMut::new(KCell::from(new_history)),
-//         }
-//     }
-// }
+
 impl KotoEntries for KSeries {}
 
-
-
-#[macro_export]
-macro_rules! geometry_arithmetic_op {
-    ($self:ident, $rhs:expr, $op:tt) => {
-        {
-              let mut new_history = ValueVec::new();
-
-                    for a in $self.data().iter() {
-                        new_history.push(a.clone() + KValue::Number(KNumber::I64(1)));
-                    }
-
-                     let k=KSeries {
-                        history: PtrMut::new(KCell::from(new_history)),
-                    };
-                     let v=KValue::from(k);
-
-
-                    Ok(v)
-        }
-    }
-}
 impl KotoObject for KSeries {
     fn index(&self, index: &KValue) -> Result<KValue> {
+        println!("====asfsdf");
+        let _index: usize = match index {
+            KValue::Number(knumber) =>{
 
-            let _index: usize = match index {
-                KValue::Number(knumber) => knumber.into(), // 将 KNumber 转换为 usize
-                // 如果 KValue 还有其他变体，你可以选择如何处理这些情况
-                _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
-            };
-        let a = self.data()[_index].clone();
-        Ok(a)
-
+               knumber.into()
+            } , // 将 KNumber 转换为 usize
+            // 如果 KValue 还有其他变体，你可以选择如何处理这些情况
+            _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
+        };
+        let a=self.get_series_from(_index);
+        //let a = self.data()[_index].clone();
+        Ok(KValue::Series(a))
     }
-    // fn add(&self, rhs: &KValue) -> Result<KValue> {
-    //     let mut new_history = ValueVec::new();
-    //
-    //     // for a in self.data().iter() {
-    //     //     new_history.push(a.clone() + KValue::Number(KNumber::I64(1)));
-    //     // }
-    //
-    //     new_history.push(KValue::Number(KNumber::I64(1)));
-    //
-    //     let k=KSeries {
-    //         history: PtrMut::new(KCell::from(new_history)),
-    //     };
-    //     let v=KValue::from(k);
-    //
-    //
-    //     Ok(v)
-    // }
-    fn add(&self, rhs: &KValue) -> Result<KValue> {
-        color_arithmetic_op!(self, rhs, +)
-    }
-
-
-    //impl_series_ops!(Add, add);
 
     fn display(&self, ctx: &mut DisplayContext) -> Result<()> {
-
         ctx.append("series==");
         ctx.append('[');
 
@@ -518,7 +203,6 @@ impl KotoObject for KSeries {
 }
 
 
-
 impl From<KList> for KSeries {
     fn from(list: KList) -> Self {
         // Convert from Borrow to Vec and then to SmallVec
@@ -531,57 +215,6 @@ impl From<KList> for KSeries {
         KSeries::with_data(data_smallvec)
     }
 }
-// 使用宏生成 Add, Sub, Mul, Div 的实现
-//impl_kvalue_series_ops!(Add, add);
-//
-// macro_rules! impl_series_kvalue_ops {
-//     ($trait:ident, $fn:ident, $op:tt) => {
-//         impl ops::$trait for KSeries {
-//             type Output = KSeries;
-//
-//             fn $fn(self, other: KSeries) -> KSeries {
-//                 let mut new_history = ValueVec::new();
-//
-//                 for (a, b) in self.data().iter().zip(other.data().iter()) {
-//                     new_history.push(a.clone() $op (b.clone()));
-//                 }
-//
-//                 KSeries {
-//                     history: PtrMut::new(KCell::from(new_history)),
-//                 }
-//             }
-//         }
-//
-//         impl ops::$trait<KValue> for KSeries {
-//             type Output = KSeries;
-//
-//             fn $fn(self, other: KValue) -> KSeries {
-//                 let mut new_history = ValueVec::new();
-//
-//                 match other {
-//                     KValue::Number(knumber) => {
-//                         for a in self.data().iter() {
-//                             new_history.push(a.clone() $op (knumber.into()));
-//                         }
-//                     },
-//                     _ => panic!("KValue does not contain a KNumber"),
-//                 }
-//
-//                 KSeries {
-//                     history: PtrMut::new(KCell::from(new_history)),
-//                 }
-//             }
-//         }
-//     };
-// }
-
-// Example usage
-//impl_series_kvalue_ops!(Add, add, +);
-// impl_series_kvalue_ops!(Sub, sub, -);
-// impl_series_kvalue_ops!(Mul, mul, *);
-// impl_series_kvalue_ops!(Div, div, /);
-
-
 
 impl Add<KValue> for KSeries {
     type Output = KSeries;
@@ -596,40 +229,16 @@ impl Add<KValue> for KSeries {
 
         new_history.push(KValue::Number(KNumber::I64(1)));
 
-         KSeries {
+        KSeries {
             history: PtrMut::new(KCell::from(new_history)),
         }
-
     }
 }
-//
-// impl Add<KNumber> for KSeries {
-//     type Output = KSeries;
-//
-//
-//     fn add(self, rhs: KNumber) -> Self::Output {
-//         let mut new_history = ValueVec::new();
-//
-//         // for a in self.data().iter() {
-//         //     new_history.push(a.clone() + KValue::Number(KNumber::I64(1)));
-//         // }
-//
-//         new_history.push(KValue::Number(KNumber::I64(1)));
-//
-//          KSeries {
-//             history: PtrMut::new(KCell::from(new_history)),
-//         }
-//
-//     }
-// }
 
 
 //
 #[test]
 fn main() {
-    // let s1 = KSeries::new(KValue::Number(KNumber::I64(2)));
-    // let s2 = KSeries::new(KValue::Number(KNumber::I64(2)));
-    //let s1 = KSeries::new(vec![KValue::Number(KNumber::I64(2))]);
     let values: ValueVec = SmallVec::from_vec(vec![
         KValue::Number(KNumber::I64(1)),
         KValue::Number(KNumber::I64(2)),
@@ -639,7 +248,7 @@ fn main() {
     // 使用 ValueVec 创建 KSeries 实例
     let s1 = KSeries::new(values);
 
-    let result = s1 + KValue::Number(KNumber::I64(3)) ;
+    let result = s1 + KValue::Number(KNumber::I64(3));
 
     println!("{:?}", result);
 
