@@ -1,0 +1,23 @@
+@main = ||
+  input_file =
+    io.extend_path koto.script_dir, '..', 'README.md'
+    -> io.read_to_string
+  generator = poetry.new input_file
+
+  separator = '==================================================='
+  print separator
+  print ''
+
+  stanzas = 3
+  lines = 5
+
+  for _ in 0..stanzas
+    for word in generator.iter().take lines
+      words = [word, word, word]
+      match random.pick 0..4
+        n if n < 3 then words[n] = words[n].to_uppercase()
+      mark = if random.bool() then '!' else '?'
+      print '{words[0]}, {words[1]}. {words[2]}{mark}'
+    print ''
+
+  print separator

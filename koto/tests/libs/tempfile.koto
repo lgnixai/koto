@@ -1,0 +1,18 @@
+@tests =
+  @test temp_file: ||
+    temp = tempfile.temp_file()
+    temp.write_line "hello"
+    temp.write_line 42
+
+    # Writes are buffered, so ensure that changes have been written to disk
+    temp.flush()
+
+    temp_path = temp.path()
+    assert io.exists temp_path
+
+    temp.seek 0
+    assert_eq (io.read_to_string temp_path), temp.read_to_string()
+
+    # Temp files are deleted when they're no longer used
+    temp = null
+    assert not io.exists temp_path

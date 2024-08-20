@@ -1,0 +1,49 @@
+import error_handling_module
+
+@tests =
+  @test try_expression: ||
+    x = try
+      42
+    catch _
+      throw "error!" # This expression shouldn't be reached
+    assert_eq x, 42
+
+  @test catch_expression: ||
+    x = try
+      # Error: List passed to function expecting a map
+      [0, 1, 2].keys()
+      99
+    catch _error
+      -1 # catch catches general runtime errors, not only thrown errors
+    assert_eq x, -1
+
+  @test finally_following_try: ||
+    x = 0
+    try
+      x = 1
+    catch error
+      throw error
+    finally
+      x = 42 # finally is executed following both try and catch blocks
+    assert_eq x, 42
+
+  @test finally_following_catch: ||
+    error_caught = false
+    x = 0
+    try
+      # Error in functor passed to external function
+      [0..10].filter |x| throw "error!"
+    catch error
+      error_caught = true
+    finally
+      x = 42 # finally is executed following both try and catch blocks
+    assert error_caught
+    assert_eq x, 42
+
+  @test error_in_other_module: ||
+    x = 0
+    try
+      error_handling_module.error_function()
+    catch error
+      x = 99
+    assert_eq x, 99

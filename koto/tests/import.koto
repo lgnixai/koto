@@ -1,0 +1,72 @@
+#-
+An import expression will attempt to import a module matching the requested name from the
+following locations, in order:
+  1. The current module's exports map.
+  2. The runtime's prelude.
+  3. The runtime's module cache.
+  4. A file in the same location as the current script that matches the import name with
+     a '.koto' extension.
+  5. A directory in the same location as the current script that matches the import name,
+     that contains a `main.koto` file.
+
+Importing a module automatically brings the module's exports map into local scope with a
+name matching the imported module.
+
+If a string is used for the imported name, then the imported module isn't automatically
+brought into scope, and it needs to be assigned to a local value.
+-#
+
+import test_module
+
+@tests =
+  @test import_module: ||
+    # The test_module module being imported here is defined in the neighbouring
+    # test_module directory, with test_module/main.koto as its entry point.
+    assert_eq (type test_module), "test_module"
+    assert_eq test_module.foo, 42
+    assert_eq (test_module.square 9), 81
+
+  @test import_as: ||
+    from test_module import bar as x
+    assert_eq x, -1
+
+  @test assign_import_item: ||
+    x = from test_module import bar
+    assert_eq x, -1
+
+  @test import_item_from_nested_module: ||
+    from test_module.baz import qux
+    assert_eq qux, "O_o"
+
+  @test import_nested_item_incrementally: ||
+    import test_module
+    from test_module import baz
+    from baz import qux
+    assert_eq qux, "O_o"
+
+  @test import_multiple_items_with_from: ||
+    x, y = from test_module import foo, bar
+    assert_eq x, 42
+    assert_eq y, -1
+
+  @test import_multiple_items_with_from_using_string: ||
+    module_name = "test_module"
+    bar = "bar"
+    from "{module_name}" import "foo" as x, "{bar}" as y
+    assert_eq x, 42
+    assert_eq y, -1
+
+  @test import_from_path: ||
+    import "test_module/baz" as baz
+    assert_eq baz.qux, "O_o"
+
+  @test tests_should_be_run_when_importing_a_module: ||
+    # Tests will be run when importing a module when the 'run import tests' setting is set
+    # in the runtime.
+    from test_module import tests_were_run
+    assert tests_were_run
+
+  @test dynamic_exported_value: ||
+    x = "value_x"
+    map.insert koto.exports(), x, 99
+    assert_eq value_x, 99

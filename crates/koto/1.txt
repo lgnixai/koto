@@ -1,0 +1,369 @@
+Ast {
+    nodes: [
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    0,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                0,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    1,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                1,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    2,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                2,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    1,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                3,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    2,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                4,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    1,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                5,
+            ),
+        },
+        AstNode {
+            node: Id(
+                ConstantIndex(
+                    2,
+                ),
+                None,
+            ),
+            span: AstIndex(
+                6,
+            ),
+        },
+        AstNode {
+            node: BinaryOp {
+                op: Add,
+                lhs: AstIndex(
+                    5,
+                ),
+                rhs: AstIndex(
+                    6,
+                ),
+            },
+            span: AstIndex(
+                7,
+            ),
+        },
+        AstNode {
+            node: Str(
+                AstString {
+                    quote: Single,
+                    contents: Interpolated(
+                        [
+                            Expression {
+                                expression: AstIndex(
+                                    3,
+                                ),
+                                format: StringFormatOptions {
+                                    alignment: Default,
+                                    min_width: None,
+                                    precision: None,
+                                    fill_character: None,
+                                },
+                            },
+                            Literal(
+                                ConstantIndex(
+                                    3,
+                                ),
+                            ),
+                            Expression {
+                                expression: AstIndex(
+                                    4,
+                                ),
+                                format: StringFormatOptions {
+                                    alignment: Default,
+                                    min_width: None,
+                                    precision: None,
+                                    fill_character: None,
+                                },
+                            },
+                            Literal(
+                                ConstantIndex(
+                                    4,
+                                ),
+                            ),
+                            Expression {
+                                expression: AstIndex(
+                                    7,
+                                ),
+                                format: StringFormatOptions {
+                                    alignment: Default,
+                                    min_width: None,
+                                    precision: None,
+                                    fill_character: None,
+                                },
+                            },
+                        ],
+                    ),
+                },
+            ),
+            span: AstIndex(
+                8,
+            ),
+        },
+        AstNode {
+            node: Function(
+                Function {
+                    args: [
+                        AstIndex(
+                            1,
+                        ),
+                        AstIndex(
+                            2,
+                        ),
+                    ],
+                    local_count: 2,
+                    accessed_non_locals: [],
+                    body: AstIndex(
+                        8,
+                    ),
+                    is_variadic: false,
+                    is_generator: false,
+                    output_type: None,
+                },
+            ),
+            span: AstIndex(
+                9,
+            ),
+        },
+        AstNode {
+            node: Assign {
+                target: AstIndex(
+                    0,
+                ),
+                expression: AstIndex(
+                    9,
+                ),
+            },
+            span: AstIndex(
+                10,
+            ),
+        },
+        AstNode {
+            node: Export(
+                AstIndex(
+                    10,
+                ),
+            ),
+            span: AstIndex(
+                11,
+            ),
+        },
+        AstNode {
+            node: MainBlock {
+                body: [
+                    AstIndex(
+                        11,
+                    ),
+                ],
+                local_count: 1,
+            },
+            span: AstIndex(
+                12,
+            ),
+        },
+    ],
+    spans: [
+        Span {
+            start: Position {
+                line: 1,
+                column: 7,
+            },
+            end: Position {
+                line: 1,
+                column: 10,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 14,
+            },
+            end: Position {
+                line: 1,
+                column: 15,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 17,
+            },
+            end: Position {
+                line: 1,
+                column: 18,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 22,
+            },
+            end: Position {
+                line: 1,
+                column: 23,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 28,
+            },
+            end: Position {
+                line: 1,
+                column: 29,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 35,
+            },
+            end: Position {
+                line: 1,
+                column: 36,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 39,
+            },
+            end: Position {
+                line: 1,
+                column: 40,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 35,
+            },
+            end: Position {
+                line: 1,
+                column: 40,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 20,
+            },
+            end: Position {
+                line: 1,
+                column: 42,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 13,
+            },
+            end: Position {
+                line: 1,
+                column: 42,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 11,
+            },
+            end: Position {
+                line: 1,
+                column: 12,
+            },
+        },
+        Span {
+            start: Position {
+                line: 1,
+                column: 0,
+            },
+            end: Position {
+                line: 1,
+                column: 42,
+            },
+        },
+        Span {
+            start: Position {
+                line: 0,
+                column: 0,
+            },
+            end: Position {
+                line: 2,
+                column: 0,
+            },
+        },
+    ],
+    constants: ConstantPool {
+        constants: [
+            Str(
+                0..3,
+            ),
+            Str(
+                3..4,
+            ),
+            Str(
+                4..5,
+            ),
+            Str(
+                5..8,
+            ),
+            Str(
+                8..12,
+            ),
+        ],
+        string_data: Ptr(
+            "fooab +  is ",
+        ),
+        hash: 12446439769632628593,
+    },
+}
+Result: 1 + 2 is 3

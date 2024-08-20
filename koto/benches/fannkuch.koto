@@ -1,0 +1,77 @@
+#-
+Description:
+https://benchmarksgame-team.pages.debian.net/benchmarksgame/description/fannkuchredux.html#fannkuchredux
+
+Based on the Ruby implementation:
+https://benchmarksgame-team.pages.debian.net/benchmarksgame/program/fannkuchredux-yarv-1.html
+-#
+
+fannkuch = |n|
+  assert n >= 4
+  p = (0..=n).to_list()
+  s = copy p
+  q = copy p
+  sign = 1
+  sum = 0
+  max_flips = 0
+  while true
+    # flip
+    q1 = p[1]
+    if q1 != 1
+      q = copy p
+      flips = 1
+      while true
+        qq = q[q1]
+        if qq == 1
+          sum = sum + sign * flips
+          if flips > max_flips
+            max_flips = flips
+          break
+        q[q1] = q1
+        if q1 >= 4
+          i, j = 2, q1 - 1
+          while i < j
+            x, y = q[i], q[j]
+            q[i], q[j] = y, x
+            i = i + 1
+            j = j - 1
+        q1 = qq
+        flips = flips + 1
+    # Permute
+    if sign == 1
+      # Rotate 1<-2
+      x, y = p[1], p[2]
+      p[1], p[2] = y, x
+      sign = -1
+    else
+      # Rotate 1<-2 and 1<-2<-3.
+      x, y = p[2], p[3]
+      p[2], p[3] = y, x
+      sign = 1
+      for i in 3..=n
+        if s[i] != 1
+          s[i] = s[i] - 1
+          break
+        if i == n
+          return sum, max_flips
+        s[i] = i
+        # Rotate 1<-...<-i+1.
+        t = p.remove 1
+        p.insert (i + 1), t
+
+@main = ||
+  n = match koto.args.get 0
+    null then 4
+    arg then arg.to_number()
+
+  sum, flips = fannkuch n
+
+  if (koto.args.get 1) != 'quiet'
+    print sum
+    print 'Pfannkuchen({n}) = {flips}'
+
+@tests =
+  @test fannkuch_5: ||
+    sum, flips = fannkuch 5
+    assert_eq sum, 11
+    assert_eq flips, 7

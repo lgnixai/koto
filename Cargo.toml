@@ -1,0 +1,93 @@
+[workspace]
+members = ["crates/*", "crates/koto/examples/*", "libs/*"]
+resolver = "2"
+
+[workspace.dependencies]
+# Flexible concrete Error type built on std::error::Error
+anyhow = "1.0.75"
+# Date and time library for Rust
+chrono = "0.4.31"
+# Statistics-driven micro-benchmarking library
+criterion = "0.5.1"
+# A crossplatform terminal library for manipulating terminals.
+crossterm = "0.27.0"
+# Derive macro to get the name of a struct, enum or enum variant
+derive-name = "1.1.0"
+# Trait object downcasting support using only safe Rust.
+downcast-rs = "1.1.1"
+# Normalize Windows paths to the most compatible format
+dunce = "1.0.2"
+# A small cross-platform library for retrieving random data from system source
+getrandom = "0.2.4"
+# A simple and fast 3D math library for games and graphics
+glam = "0.22.0"
+# Shared definitions of home directories.
+home = "0.5.5"
+# A Rust library for conveniently watching and handling file changes.
+hotwatch = "0.4.5"
+# A hash table with consistent order and fast iteration.
+indexmap = "2.0.0"
+# A partial replacement for std::time::Instant that works on WASM too.
+instant = "0.1.12"
+# Extra iterator adaptors
+itertools = "0.12.1"
+# A macro for declaring lazily evaluated statics in Rust.
+lazy_static = "1.4.0"
+# Performance and security oriented drop-in allocator
+mimalloc = { version = "0.1.39", default-features = false }
+# The core components of nannou - a creative coding framework for Rust.
+nannou_core = "0.18.0"
+# Convert and manage colors with a focus on correctness, flexibility and ease of use.
+palette = "0.7.2"
+# More compact and efficient implementations of the standard synchronization primitives.
+parking_lot = "0.12.1"
+# An ultra simple CLI arguments parser.
+pico-args = { version = "0.3.4", default-features = false }
+# A substitute implementation of the compiler's `proc_macro` API
+proc-macro2 = "1.0.70"
+# A pull parser for CommonMark
+pulldown-cmark = { version = "0.9.1", default-features = false }
+# Quasi-quoting macro quote!(...)
+quote = "1.0.33"
+# Random number generators and other randomness functionality.
+rand = "0.8.5"
+# ChaCha random number generator
+rand_chacha = "0.3.1"
+# A regular expression library
+regex = "1.10.2"
+# A speedy, non-cryptographic hash used in rustc
+rustc-hash = "1.1.0"
+# Rustyline, a readline implementation
+rustyline = "13.0.0"
+# A generic serialization/deserialization framework
+serde = "1.0.0"
+# JSON support for serde
+serde_json = { version = "1.0.0", features = ["preserve_order", "std"] }
+# YAML support for serde
+serde_yaml = "0.8.20"
+# 'Small vector' optimization: store up to a small number of items on the stack
+smallvec = { version = "1.11.1", features = ["const_generics", "union"] }
+# Parser for Rust source code
+syn = { version = "2.0.41", features = ["full"] }
+# A library for managing temporary files and directories.
+tempfile = "3.1"
+# A crate for getting the crate binary in an integration test.
+test_bin = "0.4.0"
+# Provides #[test_case(...)] macro
+test-case = "3.3.1"
+# derive(Error)
+thiserror = "1.0.44"
+# A native Rust encoder and decoder of TOML-formatted files and streams.
+toml = { version = "0.5.6", features = ["preserve_order"] }
+# Powerful library for word wrapping, indenting, and dedenting strings
+textwrap = "0.16.0"
+# Determine whether characters have the XID_Start or XID_Continue properties
+unicode-xid = "0.2.4"
+# Determine displayed width of `char` and `str` types
+unicode-width = "0.1.10"
+# This crate provides Grapheme Cluster, Word and Sentence boundaries
+unicode-segmentation = "1.10.0"
+# Easy support for interacting between JS and Rust.
+wasm-bindgen = "0.2.71"
+# Internal testing crate for wasm-bindgen
+wasm-bindgen-test = "0.3.33"

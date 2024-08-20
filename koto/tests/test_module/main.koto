@@ -1,0 +1,24 @@
+# A simple test module, used by ../import.koto
+
+local_value = 123
+
+# Export with multi-assignment
+export foo, bar = 42, -1
+
+# Export with let
+export let square: Function = |x| x * x
+
+# Export with a map block
+export
+  @type: 'test_module'
+
+  baz: import baz # Re-export the neighbouring baz module
+
+  tests_were_run: false
+
+  @tests:
+    @test run_tests: ||
+      export tests_were_run = true
+
+    @test local_value_unmodified_by_import: ||
+      assert_eq local_value, 123

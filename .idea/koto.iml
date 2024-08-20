@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/crates/bytecode/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/bytecode/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/cli/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/cli/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/derive/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/examples/poetry/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/examples/wasm/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/koto/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/lexer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/memory/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/parser/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/parser/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/runtime/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/runtime/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/serialize/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/test_utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/color/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/color/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/geometry/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/geometry/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/json/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/json/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/lib_tests/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/random/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/random/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/regex/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/regex/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/tempfile/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/tempfile/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/toml/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/toml/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/yaml/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/yaml/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/genv/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

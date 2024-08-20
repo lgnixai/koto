@@ -1,0 +1,13 @@
+@main = ||
+  n = match koto.args.get 0
+    null then 10
+    arg then arg.to_number()
+
+  a = []
+  for i in 0..n
+    a = (10..20).enumerate().to_tuple()
+
+@tests =
+  @test it_works: ||
+    x = (1..=3).enumerate().to_tuple()
+    assert_eq x, ((0, 1), (1, 2), (2, 3))

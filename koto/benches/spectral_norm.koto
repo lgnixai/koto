@@ -1,0 +1,61 @@
+#-
+An implementation of the Benchmark Game's spectral norm program
+https://benchmarksgame-team.pages.debian.net/benchmarksgame/description/spectralnorm.html#spectralnorm
+
+Adapted from the Lua implementation by Mike Pall
+https://benchmarksgame-team.pages.debian.net/benchmarksgame/program/spectralnorm-lua-1.html
+-#
+
+from iterator import repeat
+
+A = |i, j|
+  ij = i + j - 1
+  1.0 / (ij * (ij - 1) * 0.5 + i)
+
+Av = |x, y, n|
+  for i in 0..(size y)
+    i2 = i + 1
+    y[i] = x
+      .enumerate()
+      .each |(j, n)| n * (A i2, (j + 1))
+      .sum()
+
+Atv = |x, y, n|
+  for i in 0..(size y)
+    i2 = i + 1
+    y[i] = x
+      .enumerate()
+      .each |(j, n)| n * (A (j + 1), i2)
+      .sum()
+
+AtAv = |x, y, t, n|
+  Av x, t, n
+  Atv t, y, n
+
+spectral_norm = |n|
+  u = repeat(1, n).to_list()
+  v = repeat(0, n).to_list()
+  t = repeat(0, n).to_list()
+
+  for _ in 0..10
+    AtAv u, v, t, n
+    AtAv v, u, t, n
+  vBv, vv = 0, 0
+  for ui, vi in u.zip v
+    vBv = vBv + ui * vi
+    vv = vv + vi * vi
+  (vBv / vv).sqrt()
+
+@main = ||
+  n = match koto.args.get 0
+    null then 4
+    arg then arg.to_number()
+
+  result = spectral_norm n
+
+  if (koto.args.get 1) != 'quiet'
+    print result
+
+@tests =
+  @test spectral_norm_5: ||
+    assert_near (spectral_norm 5), 1.261218, 1e-6

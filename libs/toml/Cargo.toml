@@ -1,0 +1,26 @@
+[package]
+name = "koto_toml"
+version = "0.15.0"
+authors = ["irh <ian.r.hobson@gmail.com>"]
+edition = "2021"
+license = "MIT"
+description = "A Koto library for working with TOML data"
+homepage = "https://koto.dev"
+repository = "https://github.com/koto-lang/koto"
+keywords = ["scripting", "language", "koto"]
+
+[dependencies]
+toml = { workspace = true }
+
+[dependencies.koto_runtime]
+path = "../../crates/runtime"
+version = "^0.15.0"
+default-features = false
+
+[dependencies.koto_serialize]
+path = "../../crates/serialize"
+version = "^0.15.0"
+default-features = false
+
+[dev-dependencies]
+koto_test_utils = { path = "../../crates/test_utils" }

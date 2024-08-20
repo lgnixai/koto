@@ -1,0 +1,56 @@
+test_path = io.extend_path koto.script_dir, "data", "test.txt"
+
+test_contents = "\
+aaa
+bbb
+ccc
+"
+
+@tests =
+  @test current_dir: ||
+    assert_ne io.current_dir(), ""
+
+  @test temp_dir: ||
+    assert_ne io.temp_dir(), ""
+
+  @test exists: ||
+    assert io.exists test_path
+
+  @test create: ||
+    path = io.extend_path io.temp_dir(), "io-created-file.txt"
+    io.create path
+    assert io.exists path
+
+  @test io_read_to_string: ||
+    assert_eq (io.read_to_string test_path), test_contents
+
+  @test file_path: ||
+    file = io.open test_path
+    assert file.path().ends_with "test.txt"
+
+  @test file_read_line: ||
+    file = io.open test_path
+    assert_eq file.read_line(), "aaa"
+    assert_eq file.read_line(), "bbb"
+    assert_eq file.read_line(), "ccc"
+    assert_eq file.read_line(), null
+
+  @test file_read_to_string: ||
+    file = io.open test_path
+    assert_eq file.read_to_string(), test_contents
+
+  @test file_seek: ||
+    file = io.open test_path
+    assert_eq file.read_line(), "aaa"
+
+    file.seek 0
+    assert_eq file.read_line(), "aaa"
+
+  @test file_write: ||
+    path = io.extend_path io.temp_dir(), "io-write-file.txt"
+    file = io.create path
+    file_contents = "dooby-doo"
+    file.write file_contents
+
+    file = io.open path
+    assert_eq file.read_to_string(), file_contents
