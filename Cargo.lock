@@ -659,10 +659,10 @@ dependencies = [
  "criterion",
  "dunce",
  "koto_bytecode",
- "koto_color",
  "koto_geometry",
  "koto_parser",
  "koto_runtime",
+ "koto_talib",
  "koto_test_utils",
  "mimalloc",
  "thiserror",
@@ -837,6 +837,15 @@ version = "0.15.0"
 dependencies = [
  "koto_runtime",
  "serde",
+]
+
+[[package]]
+name = "koto_talib"
+version = "0.15.0"
+dependencies = [
+ "koto_runtime",
+ "koto_test_utils",
+ "palette 0.7.5",
 ]
 
 [[package]]
