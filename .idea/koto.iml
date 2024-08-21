@@ -39,6 +39,10 @@
       <sourceFolder url="file://$MODULE_DIR$/libs/yaml/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/libs/yaml/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/crates/genv/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/series/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/series/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/talib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/libs/talib/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

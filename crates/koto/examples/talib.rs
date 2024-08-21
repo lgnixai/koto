@@ -11,7 +11,10 @@ let c=ta.sma(close,2)
 #print type c
 
 #print close.get(0)
-print c
+while true
+    print c
+    sleep(2000)
+
 #print scope
 
 ";
@@ -33,7 +36,15 @@ print c
     koto.prelude().insert("close", close.clone());
     //koto.prelude().insert("scope", KValue::from(scope));
 
-
+    koto.prelude()
+        .add_fn("sleep", |ctx| match ctx.args() {
+            [KValue::Number(n)] => {
+                //close.insert(KValue::Number(KNumber::F64(10 as f64)));
+                sleep(Duration::from_millis(3000));
+                Ok(().into())
+            },
+            unexpected => unexpected_args("|Number|", unexpected),
+        });
 
     //我需要在这里继续操作 close 给 close push  值 如何操作
     koto.prelude().insert("ta", koto_talib::make_module());
@@ -44,7 +55,8 @@ print c
     for i in 3..=50 {
         close.insert(KValue::Number(KNumber::F64(i as f64)));
         sleep(Duration::from_millis(1000));
-        koto.compile_and_run(script).unwrap();
+        print!("234234");
+       // koto.compile_and_run(script).unwrap();
 
     }
     // Continue to manipulate the close series
