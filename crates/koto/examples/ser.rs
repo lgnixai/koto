@@ -10,7 +10,7 @@ let h=ta(high)
 print type c
 print c,h, h/5
 print h,h[1],c[2]
-
+print c.get(2)
 
 ";
     let mut koto = Koto::default();

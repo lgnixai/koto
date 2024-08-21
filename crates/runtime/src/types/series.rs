@@ -72,33 +72,8 @@ impl KSeries {
 
         }
     }
-    // pub fn with_contents(data: ValueVec, current: KValue) -> Self {
-    //     Self {
-    //         history: data.into(),
-    //         current: current.into(),
-    //     }
-    // }
-
-    // 索引实现
-    // pub fn get_series(&self, index: usize) -> KSeries {
-    //     let data = self.data();
-    //     let history_len = data.len();
-    //     let mut new_history = crate::ValueVec::with_capacity(history_len);
-    //
-    //     for i in 0..history_len {
-    //         let value = if let Some(v) = data.get(history_len - 1 - i - index) {
-    //             v.clone()
-    //         } else {
-    //             KValue::Number(KNumber::I64(0))
-    //         };
-    //         new_history.push(value);
-    //     }
-    //
-    //     KSeries {
-    //         history: PtrMut::new(KCell::from(new_history)),
-    //     }
-    // }
-    fn index(&self, index: &KValue) -> Result<KValue> {
+    
+    fn index_value(&self, index: &KValue) -> Result<KValue> {
         println!("====asfsdf");
         println!("====asfsdf");
         let _index: usize = match index {
@@ -109,9 +84,9 @@ impl KSeries {
             // 如果 KValue 还有其他变体，你可以选择如何处理这些情况
             _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
         };
-        let a=self.get_series_from(_index);
-        //let a = self.data()[_index].clone();
-        Ok(KValue::Series(a))
+        //let a=self.get_series_from(_index);
+        let a = self.data()[_index].clone();
+        Ok(KValue::from(a))
     }
 
     // 获取一个新的 Series，其中切片从 start 开始，如果长度不够，则补 Null
@@ -139,6 +114,8 @@ impl KSeries {
                 history: PtrMut::new(KCell::from(new_history)),
             }
     }
+
+
 }
 
 

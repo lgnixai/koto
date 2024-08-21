@@ -12,6 +12,7 @@ pub mod string;
 pub mod test;
 pub mod tuple;
 mod value_sort;
+pub mod series;
 
 use crate::KMap;
 
@@ -22,6 +23,7 @@ pub struct CoreLib {
     pub iterator: KMap,
     pub koto: KMap,
     pub list: KMap,
+    pub series: KMap,
     pub map: KMap,
     pub os: KMap,
     pub number: KMap,
@@ -39,6 +41,7 @@ impl CoreLib {
         result.insert("iterator", self.iterator.clone());
         result.insert("koto", self.koto.clone());
         result.insert("list", self.list.clone());
+        result.insert("series", self.series.clone());
         result.insert("map", self.map.clone());
         result.insert("os", self.os.clone());
         result.insert("number", self.number.clone());
@@ -73,6 +76,7 @@ impl Default for CoreLib {
             iterator: iterator::make_module(),
             koto: koto::make_module(),
             list: list::make_module(),
+            series: series::make_module(),
             map: map::make_module(),
             os: os::make_module(),
             number: number::make_module(),

@@ -2550,6 +2550,7 @@ impl KotoVm {
 
         match &accessed_value {
             List(_) => core_op!(list, true),
+            Series(_) => core_op!(series, true),
             Number(_) => core_op!(number, false),
             Range(_) => core_op!(range, true),
             Str(_) => core_op!(string, true),
