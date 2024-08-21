@@ -18,7 +18,7 @@ rc = ["koto_runtime/rc"]
 koto_bytecode = { path = "../bytecode", version = "^0.15.0", default-features = false }
 koto_parser = { path = "../parser", version = "^0.15.0", default-features = false }
 koto_runtime = { path = "../runtime", version = "^0.15.0", default-features = false }
-
+rhai = "*"
 dunce = { workspace = true }
 thiserror = { workspace = true }
 

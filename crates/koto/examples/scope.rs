@@ -1,5 +1,3 @@
-use std::thread::sleep;
-use std::time::Duration;
 use rhai::{Dynamic, Scope};
 use koto::{derive::*, prelude::*, Result};
 use koto_runtime::KSeries;
@@ -8,9 +6,9 @@ fn main() {
     let script = "
 import ta
 let c=ta.sma(close,2)
-#print type c
+print type c
 
-#print close.get(0)
+print close
 print c
 #print scope
 
@@ -18,21 +16,54 @@ print c
 
     let mut koto = Koto::default();
 
-    let  mut close={
+    let mut close={
         let mut values = vec![];
 
         // 使用 for 循环将 0 到 10 的值添加到 values 向量中
-        for i in 0..=3 {
+        for i in 0..=10 {
             values.push(KValue::Number(KNumber::F64(i as f64)));
         }
         let s=KSeries::from(values);
         // println!("{:?}",s);
          s
     };
-
-    koto.prelude().insert("close", close.clone());
+//     let mut scope = Scope::new();
+// // 将 close 序列添加到 scope 中
+//     let mut high: Vec<f64> = vec![100.5, 101.0, 102.3, 103.8];
+//
+//     // 将 close 序列添加到 scope 中
+//     scope.push("high", high.clone());
+//     let new_close_value = 104.7;
+//     high.push(new_close_value);
+//
+//     // 更新 scope 中的 close 序列
+//     scope.set_value("high", high.clone());
+//     let a = scope.get_value::<Dynamic>("high");
+//     if let Some(s) = a {
+//         // 尝试将 Dynamic 转换为 Vec<f64>
+//         if let high_vec = s.clone().try_cast::<Vec<f64>>() {
+//             // 遍历并打印 high 序列中的值
+//             for value in high_vec.unwrap().iter() {
+//                 println!("high: {}", value);
+//             }
+//         } else {
+//             println!("Failed to cast Dynamic to Vec<f64>");
+//         }
+//     } else {
+//         println!("No value found in scope for 'high'");
+//     }
+    //println!("high:{:?}",scope.get_value::<Dynamic>("high"));
+    //close.insert(KValue::Number(KNumber::F64(11.0)));
+    koto.prelude().insert("close", close);
     //koto.prelude().insert("scope", KValue::from(scope));
 
+    // Continue to manipulate the close series
+    // For example, adding more values
+    // if let Some(close_series) = koto.prelude().data_mut("close") {
+    //     for i in 12..=15 {
+    //         close_series.push(KValue::Number(KNumber::F64(i as f64)));
+    //     }
+    // }
 
 
     //我需要在这里继续操作 close 给 close push  值 如何操作
@@ -40,18 +71,6 @@ print c
 
 
     koto.compile_and_run(script).unwrap();
-
-    for i in 3..=50 {
-        close.insert(KValue::Number(KNumber::F64(i as f64)));
-        sleep(Duration::from_millis(1000));
-        koto.compile_and_run(script).unwrap();
-
-    }
-    // Continue to manipulate the close series
-    // For example, adding more values
-   // koto.prelude().update_series("close") ;
-
-
 }
 //
 // // MyType is a type that we want to use in Koto

@@ -155,6 +155,30 @@ impl KMap {
         self.data_mut().insert(key.into(), value.into());
     }
 
+    pub fn update_series(&self, key: impl Into<ValueKey>) {
+        let mut data_map = self.data_mut();
+        let _index=key.into().clone();
+        if let Some(existing_value) = data_map.remove(&_index) {
+            match existing_value {
+                KValue::Series(series) => {
+                    //series.insert(value.into()); // 假设 Series 有 insert 函数
+                    // 更新 map 中的值
+                    data_map.insert(_index, KValue::Series(series.clone()));
+                }
+                _ => {
+                    // 非 Series 类型处理
+                    println!("Key does not correspond to a Series type");
+                }
+            }
+        } else {
+            // 处理键值不存在的情况
+            println!("No value found for the given key");
+        }
+    }
+
+
+
+
     /// Inserts a value into the meta map, initializing the meta map if it doesn't yet exist
     pub fn insert_meta(&mut self, key: MetaKey, value: KValue) {
         self.meta
