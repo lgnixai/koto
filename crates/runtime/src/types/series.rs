@@ -1,4 +1,4 @@
-use crate::{prelude::*, Borrow, PtrMut, Result};
+use crate::{prelude::*, Borrow,BorrowMut, PtrMut, Result};
 use indexmap::{Equivalent, IndexMap};
 use rustc_hash::FxHasher;
 use std::{
@@ -12,8 +12,6 @@ use smallvec::SmallVec;
 use koto_memory::Ptr;
 use crate::KValue::List;
 
-
-use std::borrow::BorrowMut;
 use std::ops::Add;
 
 
@@ -54,11 +52,15 @@ impl KSeries {
         self.len() == 0
     }
 
-    pub fn data(&self) -> Borrow<crate::ValueVec> {
+    pub fn data(&self) -> Borrow<ValueVec> {
         self.history.borrow()
     }
-
-
+    pub fn data_mut(&self) -> BorrowMut<ValueVec> {
+        self.history.borrow_mut()
+    }
+    pub fn insert(&self,  value: impl Into<KValue>) {
+        self.data_mut().push( value.into());
+    }
     pub fn with_data(data: ValueVec) -> Self {
         // let v=(KValue::Number(KNumber::I64(2)));
         // Self::with_contents(data, v)

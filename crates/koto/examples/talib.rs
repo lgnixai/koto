@@ -7,13 +7,14 @@ import ta
 let c=ta.sma(close,2)
 print type c
 
+print close
 print c
 
 ";
 
     let mut koto = Koto::default();
 
-    let close={
+    let mut close={
         let mut values = vec![];
 
         // 使用 for 循环将 0 到 10 的值添加到 values 向量中
@@ -24,10 +25,11 @@ print c
         // println!("{:?}",s);
          s
     };
-
+    close.insert(KValue::Number(KNumber::F64(11.0)));
     koto.prelude().insert("close", close);
 
     koto.prelude().insert("ta", koto_talib::make_module());
+
 
     koto.compile_and_run(script).unwrap();
 }
