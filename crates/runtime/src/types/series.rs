@@ -24,7 +24,7 @@ pub type ValueVec = smallvec::SmallVec<[KValue; 4]>;
 #[derive(Debug, Clone)]
 pub struct KSeries {
     // current: PtrMut<KValue>,
-    history: PtrMut<crate::ValueVec>,
+    pub history: PtrMut<crate::ValueVec>,
 }
 
 impl KSeries {
@@ -189,6 +189,16 @@ impl From<KList> for KSeries {
 
         let data_smallvec: ValueVec = data_vec.into(); // Convert Vec<KValue> to SmallVec<[KValue; 4]>
         //println!("{:?}",data_smallvec);
+        KSeries::with_data(data_smallvec)
+    }
+}
+
+impl From<Vec<KValue>> for KSeries {
+    fn from(vec: Vec<KValue>) -> Self {
+        // 将 Vec<KValue> 转换为 ValueVec (SmallVec<[KValue; 4]>)
+        let data_smallvec: ValueVec = vec.into();
+
+        // 使用转换后的数据创建 KSeries
         KSeries::with_data(data_smallvec)
     }
 }

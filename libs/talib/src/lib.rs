@@ -4,17 +4,43 @@ mod color;
 
 pub use color::Color;
 
-use koto_runtime::{prelude::*, Result};
+use koto_runtime::{KSeries, prelude::*, PtrMut, Result};
 use palette::{Hsl, Hsv};
+use yata::prelude::*;
+use yata::methods::SMA;
+use koto_runtime::KNumber::F64;
+use koto_runtime::KValue::Series;
+
+// SMA of length=3
 
 pub fn make_module() -> KMap {
     use KValue::{Number, Str};
     let mut result = KMap::default();
 
-    result.add_fn("hsl", |ctx| match ctx.args() {
-        [Number(h), Number(s), Number(l)] => {
-            let hsv = Hsl::new(f32::from(h), f32::from(s), f32::from(l));
-            Ok(Color::from(hsv).into())
+    result.add_fn("sma", |ctx| match ctx.args() {
+        [Series(src), Number(len)] => {
+            let mut rs = ValueVec::new();
+
+            println!("{:?}",f32::from(len));
+            let mut sma = SMA::new(f32::from(len) as u8, &0.0).unwrap();
+            for (n) in src.data().iter() {
+                let value: f64 = match n {
+                    KValue::Number(knumber) =>{
+
+                        knumber.into()
+                    } , // 将 KNumber 转换为 usize
+                    // 如果 KValue 还有其他变体，你可以选择如何处理这些情况
+                    _ => panic!("KValue does not contain a KNumber"), // 或者处理为默认值
+                };
+
+               // println!("{:?}",value);
+
+                rs.push(KValue::from(sma.next(&value)))
+            }
+            let rest=KSeries {
+                history: PtrMut::new(KCell::from(rs)),
+            };
+            Ok(KValue::Series(rest))
         }
         unexpected => unexpected_args("|Number, Number, Number|", unexpected),
     });

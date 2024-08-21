@@ -1,22 +1,33 @@
 use koto::{derive::*, prelude::*, Result};
+use koto_runtime::KSeries;
 
 fn main() {
     let script = "
 import ta
-let c=ta.named('yellow')
+let c=ta.sma(close,2)
 print type c
+
+print c
 
 ";
 
     let mut koto = Koto::default();
 
-    // koto.prelude()
-    //     .add_fn("series", |ctx| match ctx.args() {
-    //         [KValue::Number(n)] => Ok(MyType::make_koto_object(*n).into()),
-    //         [KValue::List(n)] => Ok(MyType::make_series(*n).into()),
-    //         unexpected => unexpected_args("|Number|", unexpected),
-    //     });
-     koto.prelude().insert("ta", koto_talib::make_module());
+    let close={
+        let mut values = vec![];
+
+        // 使用 for 循环将 0 到 10 的值添加到 values 向量中
+        for i in 0..=10 {
+            values.push(KValue::Number(KNumber::F64(i as f64)));
+        }
+        let s=KSeries::from(values);
+        // println!("{:?}",s);
+         s
+    };
+
+    koto.prelude().insert("close", close);
+
+    koto.prelude().insert("ta", koto_talib::make_module());
 
     koto.compile_and_run(script).unwrap();
 }
